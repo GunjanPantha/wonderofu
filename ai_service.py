@@ -40,8 +40,8 @@ class MistralAI:
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_prompt}
                     ],
-                    "temperature": 0.8,
-                    "max_tokens": 200,
+                    "temperature": 0.7,
+                    "max_tokens": 80,
                     "top_p": 0.9
                 },
                 timeout=30
@@ -59,8 +59,6 @@ class MistralAI:
                 return self._fallback_response(user_input, game_state)
                 
         except Exception as e:
-            print(f"AI Error: {e}")
-            return self._fallback_response(user_input, game_state)
             print(f"AI Error: {e}")
             return self._fallback_response(user_input, game_state)
     
@@ -90,11 +88,11 @@ CURRENT GAME STATE:
 - Difficulty: {settings.GAME_DIFFICULTY}
 
 RESPONSE STYLE:
-- Keep responses under 150 words
-- Be atmospheric and slightly ominous
-- Show the forest actively responding to player actions
-- Include sensory details (sounds, smells, textures)
-- End with the current situation, not obvious next steps"""
+- Keep responses under 50 words
+- Be direct and concise
+- Focus on immediate consequences
+- Show forest actively opposing the action
+- End with current situation, not backstory"""
 
     def _build_user_prompt(self, user_input, game_state):
         """Build the user prompt with context"""
@@ -137,33 +135,33 @@ Generate a response where the forest actively opposes this action. Be creative w
         
         # Action-specific responses
         if any(word in user_input_lower for word in ['fire', 'burn', 'flame', 'smoke']):
-            return "You try to start a fire, but the wood refuses to catch. Every spark dies as soon as it forms, as if the forest itself is snuffing out your attempts. The dampness seems to follow you wherever you go."
+            return "The wood won't catch. Every spark dies instantly."
             
         elif any(word in user_input_lower for word in ['gun', 'shoot', 'weapon', 'pistol']):
-            return "You reach for your weapon, but your hand passes through empty air. Looking down, you realize your gun has vanished - or perhaps it was never there at all. The forest plays tricks on memory and reality."
+            return "Your weapon has vanished. Was it ever there?"
             
         elif any(word in user_input_lower for word in ['north', 'south', 'east', 'west', 'walk', 'go', 'move']):
-            return "You start walking in that direction, but the trees seem to shift around you. After what feels like progress, you notice the same gnarled oak you passed minutes ago. The forest has quietly rearranged itself."
+            return "The trees shift around you. You're back where you started."
             
         elif any(word in user_input_lower for word in ['climb', 'tree', 'up']):
-            return "The tree branch creaks ominously under your weight. As you climb higher, the branch begins to bend back toward the ground, as if gravity itself is working against your escape."
+            return "The branch bends downward as you climb, defying gravity."
             
         elif any(word in user_input_lower for word in ['shout', 'scream', 'yell', 'call', 'help']):
-            return "Your voice echoes through the trees, but instead of your cry for help, you hear only mocking laughter that seems to come from the forest itself. The sound grows louder until it's all around you."
+            return "Your voice echoes back as mocking laughter."
             
         elif any(word in user_input_lower for word in ['shadow', 'darkness', 'dark']):
-            return "The shadows seem to recoil from your attention, but they quickly gather behind you. You can feel their presence growing stronger, as if confronting them has only made them bolder."
+            return "The shadows recoil, then gather behind you stronger."
             
         elif any(word in user_input_lower for word in ['signal', 'flag', 'wave']):
-            return "You create your signal, but as you do, a thick fog rolls in from nowhere, obscuring everything beyond arm's reach. Your signal disappears into the mist as if it never existed."
+            return "Thick fog rolls in, swallowing your signal."
             
         else:
             # Generic responses for unrecognized actions
             fallbacks = [
-                "The forest responds to your action with unnatural stillness. Even the wind stops, as if the woods are holding their breath and waiting for something.",
-                "As you attempt this, the very air seems to thicken around you. Your movements become sluggish, as if you're moving through invisible molasses.",
-                "The moment you try this, a low rumble emanates from deep underground. The trees lean inward slightly, their branches reaching toward you like grasping fingers.",
-                "Your action triggers a subtle shift in the forest's mood. The light filtering through the canopy dims noticeably, and you swear you can hear whispered conversations in a language you don't recognize."
+                "The forest holds its breath. Everything stops.",
+                "The air thickens. Your movements slow.",
+                "Underground rumbles. Trees lean closer.",
+                "The light dims. Whispers surround you."
             ]
             return random.choice(fallbacks)
 
