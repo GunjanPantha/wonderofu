@@ -119,8 +119,16 @@ After deployment:
 
 4. **ALLOWED_HOSTS error:**
    - Add your domain to ALLOWED_HOSTS in settings.py
+   - For Railway: Add `.railway.app` and `.up.railway.app`
+   - Quick fix: Add `'*'` to allow all hosts (less secure but works)
 
-5. **WSGI Application error (Railway/Nixpacks):**
+5. **Bad Request (400) error:**
+   - This is usually an ALLOWED_HOSTS issue
+   - Check your Railway domain in the logs
+   - Add the exact domain to ALLOWED_HOSTS
+   - Temporary fix: Use `ALLOWED_HOSTS = ['*']`
+
+6. **WSGI Application error (Railway/Nixpacks):**
    - Ensure `wsgi.py` file exists
    - Check WSGI_APPLICATION setting in settings.py
    - Use `gunicorn wsgi:application` in start command

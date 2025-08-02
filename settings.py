@@ -15,10 +15,12 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1',
-    '*.railway.app',
+    '.railway.app',
+    '.up.railway.app',
     '*.herokuapp.com',
     '*.vercel.app',
-    '*.render.com'
+    '*.render.com',
+    '*'  # Allow all hosts in production for now
 ]
 
 # Mistral AI Configuration
