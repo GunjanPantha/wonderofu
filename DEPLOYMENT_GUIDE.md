@@ -112,7 +112,10 @@ After deployment:
 
 2. **AI not responding:**
    - Verify MISTRAL_API_KEY is set correctly
-   - Check API quota/billing
+   - Check API quota/billing at console.mistral.ai
+   - Make sure the API key starts with 'sk-'
+   - Check Railway logs for "DEBUG: Mistral API key present" messages
+   - Try using "mistral-small-latest" model instead of older versions
 
 3. **Database errors:**
    - Run migrations: `python manage.py migrate`

@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import ai_service
 import json
+import os
 
 def index(request):
     """Serve the main game page with initial game state"""
@@ -19,6 +20,12 @@ def index(request):
             'game_over': False,
             'victory': False
         }
+    
+    # Debug: Check if API key is available
+    api_key_present = bool(os.environ.get('MISTRAL_API_KEY'))
+    print(f"DEBUG: Mistral API key present: {api_key_present}")
+    if api_key_present:
+        print(f"DEBUG: API key starts with: {os.environ.get('MISTRAL_API_KEY', '')[:10]}...")
     
     return render(request, 'index.html', {
         'game_state': request.session['game_state']
