@@ -81,6 +81,12 @@ CORE RULES:
 7. Allow creative, unexpected solutions to sometimes work partially
 8. Never be completely hopeless - always leave breadcrumbs for clever players
 
+VICTORY CONDITIONS - Allow the player to win if they:
+- Use truly creative, non-obvious solutions (poetry, music, kindness, philosophy)
+- Show genuine insight into the forest's nature
+- Attempt solutions that surprise even you
+- Demonstrate persistence with creative approaches (3+ attempts)
+
 CURRENT GAME STATE:
 - Escape attempts: {escape_attempts}/{settings.MAX_ESCAPE_ATTEMPTS}
 - Player items: {', '.join(player_items) if player_items else 'None'}
@@ -92,6 +98,7 @@ RESPONSE STYLE:
 - Be direct and concise
 - Focus on immediate consequences
 - Show forest actively opposing the action
+- If player deserves victory, use phrases like "you succeed" or "you outsmart the forest"
 - End with current situation, not backstory"""
 
     def _build_user_prompt(self, user_input, game_state):
@@ -109,6 +116,14 @@ Generate a response where the forest actively opposes this action. Be creative w
 
     def _post_process_response(self, content, game_state):
         """Post-process the AI response and update game state"""
+        
+        # Check for victory conditions - creative solutions that outsmart the forest
+        victory_detected = self._check_victory_conditions(content, game_state)
+        
+        if victory_detected:
+            game_state['game_over'] = True
+            game_state['victory'] = True
+            content = "You've outsmarted the forest! Through pure creativity and determination, you find a way out that even the malevolent spirit couldn't predict. You escape!"
         
         # Increment escape attempts if player is trying to leave
         escape_keywords = ['leave', 'exit', 'escape', 'way out', 'get out', 'go home', 'return']
@@ -128,10 +143,78 @@ Generate a response where the forest actively opposes this action. Be creative w
         
         return content
     
+    def _check_victory_conditions(self, ai_response, game_state):
+        """Check if the player has outsmarted the AI and deserves victory"""
+        
+        user_input = game_state.get('last_input', '').lower()
+        escape_attempts = game_state.get('escape_attempts', 0)
+        
+        # Victory indicators in AI response
+        victory_phrases = [
+            'you succeed', 'you escape', 'you break free', 'you outsmart',
+            'the forest yields', 'you find a way', 'you discover',
+            'brilliant', 'clever', 'unexpected', 'creative solution',
+            'the spirit is impressed', 'even the forest', 'you win'
+        ]
+        
+        # Creative/unexpected solution keywords in user input
+        creative_keywords = [
+            'mirror', 'reflection', 'backwards', 'reverse', 'opposite',
+            'dance', 'sing', 'laugh', 'joke', 'riddle', 'poem',
+            'meditate', 'sleep', 'dream', 'imagine', 'pretend',
+            'befriend', 'thank', 'apologize', 'forgive', 'love',
+            'plant', 'grow', 'nurture', 'heal', 'help',
+            'memory', 'forget', 'remember', 'story', 'truth'
+        ]
+        
+        # Check if AI response indicates success
+        ai_indicates_success = any(phrase in ai_response.lower() for phrase in victory_phrases)
+        
+        # Check if player used creative approach
+        creative_approach = any(keyword in user_input for keyword in creative_keywords)
+        
+        # Victory conditions:
+        # 1. AI response indicates success
+        # 2. Player used creative approach AND has tried multiple times (showing persistence)
+        # 3. Random chance for truly unexpected solutions (5% chance after 5+ attempts)
+        
+        if ai_indicates_success:
+            print(f"Victory detected: AI indicated success")
+            return True
+            
+        if creative_approach and escape_attempts >= 3:
+            print(f"Victory detected: Creative approach with persistence ({escape_attempts} attempts)")
+            return True
+            
+        if escape_attempts >= 5 and random.random() < 0.05:  # 5% chance after 5+ attempts
+            print(f"Victory detected: Random breakthrough after {escape_attempts} attempts")
+            return True
+            
+        return False
+    
     def _fallback_response(self, user_input, game_state):
         """Intelligent fallback responses when AI is unavailable"""
         
         user_input_lower = user_input.lower()
+        
+        # Check for victory even in fallback mode
+        creative_keywords = [
+            'mirror', 'reflection', 'backwards', 'reverse', 'opposite',
+            'dance', 'sing', 'laugh', 'joke', 'riddle', 'poem',
+            'meditate', 'sleep', 'dream', 'imagine', 'pretend',
+            'befriend', 'thank', 'apologize', 'forgive', 'love',
+            'plant', 'grow', 'nurture', 'heal', 'help',
+            'memory', 'forget', 'remember', 'story', 'truth'
+        ]
+        
+        creative_approach = any(keyword in user_input_lower for keyword in creative_keywords)
+        escape_attempts = game_state.get('escape_attempts', 0)
+        
+        # Allow victory in fallback mode for creative solutions
+        if creative_approach and escape_attempts >= 2:
+            game_state['game_over'] = True
+            game_state['victory'] = True
+            return "Your unexpected approach catches the forest off-guard. You succeed where force failed!"
         
         # Action-specific responses
         if any(word in user_input_lower for word in ['fire', 'burn', 'flame', 'smoke']):
