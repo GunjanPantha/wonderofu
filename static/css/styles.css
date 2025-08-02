@@ -1,0 +1,38 @@
+body {
+    font-family: 'Space Mono', monospace;
+    background-color: black;
+    color: rgb(0, 255, 42);
+}
+
+.typewriter-wrapper {
+    display: inline-block;
+}
+
+.cursor {
+    display: inline-block;
+    color: rgb(0, 255, 42);
+    animation: blink 0.7s step-end infinite;
+    font-weight: bold;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+input.terminal-input {
+    font-family: 'Space Mono', monospace;
+    color: rgb(0, 255, 42);
+    background-color: transparent;
+    border: 2px solid rgb(0, 255, 42);
+}
+
+input.terminal-input::placeholder {
+    color: rgba(0, 255, 42, 0.6);
+}
+
+input.terminal-input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 42, 0.3);
+    border-color: rgb(0, 255, 42);
+}
