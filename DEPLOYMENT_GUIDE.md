@@ -30,7 +30,7 @@ This guide will help you deploy your AI-powered text adventure game online so ev
 2. Connect GitHub repository
 3. Choose "Web Service"
 4. Build Command: `pip install -r requirements.txt`
-5. Start Command: `python manage.py migrate && python manage.py collectstatic --noinput && gunicorn settings:application`
+5. Start Command: `python manage.py migrate && python manage.py collectstatic --noinput && gunicorn wsgi:application`
 6. Add environment variables (same as Railway)
 
 ### 3. **Heroku**
@@ -119,6 +119,11 @@ After deployment:
 
 4. **ALLOWED_HOSTS error:**
    - Add your domain to ALLOWED_HOSTS in settings.py
+
+5. **WSGI Application error (Railway/Nixpacks):**
+   - Ensure `wsgi.py` file exists
+   - Check WSGI_APPLICATION setting in settings.py
+   - Use `gunicorn wsgi:application` in start command
 
 ## 🆘 Need Help?
 
